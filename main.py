@@ -5,6 +5,11 @@ from matplotlib.animation import FuncAnimation
 # All coordinates will have the following structure:
 # Tuple of two elements (x, y) for positions on the cartesian plane
 # All coordinates will be within 0 and 1 (floating point)
+
+# enable dynamic mode for dynamically displaying changes
+# Dynamic mode runs slower, but updates the graphs dynamically, which is useful to see the process
+dynamic_mode = False
+
 weights = []
 i = 0
 while i < 400:
@@ -20,11 +25,18 @@ circle_inn = plt.Circle((0.5, 0.5), 0.3, color='r', fill=False)
 
 fig, ax = plt.subplots()
 
-# enable interactive mode for dynamically displaying changes
-plt.ion()
-
 ax.add_patch(circle_out)
 ax.add_patch(circle_inn)
+
+plt.scatter(*zip(*weights), color='b')
+
+if dynamic_mode:
+    plt.ion()
+    plt.draw()
+    plt.pause(0.1)
+else:
+    ax.set_title("i = 1")
+    plt.show()
 
 i = 0 # t
 lambda_i = 10
@@ -61,19 +73,41 @@ while i < i_max:
             weights[distances[k][1]] = (weights[distances[k][1]][0]+w_delta_x, weights[distances[k][1]][1]+w_delta_y)
         
         # clear past weight and signal points
-        plt.cla()
+        if dynamic_mode:
+            plt.cla()
 
-        ax.add_patch(circle_out)
-        ax.add_patch(circle_inn)
+            ax.add_patch(circle_out)
+            ax.add_patch(circle_inn)
 
-        plt.scatter(*zip(*weights), color='b')
-        plt.scatter(signal[0], signal[1], color='g')
-        plt.draw()
-        plt.pause(0.1)
+            plt.scatter(*zip(*weights), color='b')
+            plt.scatter(signal[0], signal[1], color='g')
+            plt.draw()
+            plt.pause(0.1)
+        else:
+            if i == 299 or i == 1999 or i == 39999:
+                plt.close()
+
+                circle_out = plt.Circle((0.5, 0.5), 0.5, color='r', fill=False)
+                circle_inn = plt.Circle((0.5, 0.5), 0.3, color='r', fill=False)
+
+                fig, ax = plt.subplots()
+
+                ax.set_title(f"i = {i+1}")
+
+                ax.add_patch(circle_out)
+                ax.add_patch(circle_inn)
+
+                plt.scatter(*zip(*weights), color='b')
+                plt.scatter(signal[0], signal[1], color='g')
+                plt.draw()
+                plt.show()
         
     i += 1
 
-# Final display. The final pause can be anything, and the final graph will display
+# After all the iterations are complete, the weights should be equally distributed
+# in the ring enclosed by the circles
+
+# Final pause. The final pause can be anything, and the final graph will display
 # for the amount set in that pause. This can be changed to anything from 60 seconds
-plt.show()
-plt.pause(60)
+if dynamic_mode:
+    plt.pause(60)
