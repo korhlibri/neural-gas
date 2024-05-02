@@ -84,7 +84,7 @@ while i < i_max:
             plt.draw()
             plt.pause(0.1)
         else:
-            if i == 299 or i == 1999 or i == 39999:
+            if i == 299 or i == 2499 or i == 39999:
                 plt.close()
 
                 circle_out = plt.Circle((0.5, 0.5), 0.5, color='r', fill=False)
