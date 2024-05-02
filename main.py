@@ -35,7 +35,7 @@ if dynamic_mode:
     plt.draw()
     plt.pause(0.1)
 else:
-    ax.set_title("i = 1")
+    ax.set_title("i = 0")
     plt.show()
 
 i = 0 # t
